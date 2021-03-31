@@ -5,4 +5,4 @@ CMD ["/relay/step.sh"]
 
 LABEL "org.opencontainers.image.title"="jq"
 LABEL "org.opencontainers.image.description"="Run a jq filter on a given input"
-LABEL "com.puppet.nebula.sdk.version"="v1"
+LABEL "sh.relay.sdk.version"="v1"

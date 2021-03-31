@@ -3,6 +3,13 @@
   "type": "object",
   "properties": {
     "input": {
+      "type": [
+        "array",
+        "boolean",
+        "number",
+        "object",
+        "string"
+      ],
       "description": "The input data to provide to jq"
     },
     "raw": {
