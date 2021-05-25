@@ -26,6 +26,7 @@ examples:
     - name: GetRandomString
       image: relaysh/stdlib-step-curl
       spec:
+        method: GET
         url: "https://random.justyy.workers.dev/api/random/"
         expects: 200
         query:
