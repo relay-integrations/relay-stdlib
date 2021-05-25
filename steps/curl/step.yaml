@@ -1,0 +1,99 @@
+# Step metadata - full description at:
+# https://github.com/puppetlabs/relay-rfcs/blob/master/content/0006-integration-layout/rfc.md#common-metadata
+apiVersion: integration/v1
+kind: Step
+name: curl
+version: 1
+summary: Makes an API call and returns the status code + response body
+
+description: |
+  Makes an API call and returns the status code + response body
+
+build:
+  apiVersion: build/v1
+  kind: Docker
+
+publish:
+  repository: relaysh/stdlib-step-curl
+
+# optional list of examples; each one can be a Step or a complete Workflow
+examples:
+- summary: Create a random string using an API call
+  content:
+    apiVersion: v1
+    kind: Workflow
+    steps:
+    - name: GetRandomString
+      image: relaysh/stdlib-step-curl
+      spec:
+        url: "https://random.justyy.workers.dev/api/random/"
+        expects: 200
+        query:
+          n: 32
+          x: 1
+- summary: Create a new remote engine in a Talend environment
+  content:
+    apiVersion: v1
+    kind: Workflow
+    parameters:
+      workspace:
+        description: The Talend workspace to use
+      environment:
+        description: The Talend environment to use
+      name:
+        description: The name of the new remote engine
+    steps:
+    - name: CreateRemoteEngine
+      image: relaysh/stdlib-step-curl
+      spec:
+        url: "https://api.eu.cloud.talend.com/tmc/v1.3/runtimes/remote-engines"
+        expects: [ 200, 201 ]
+        headers:
+          "Content-Type": "application/json"
+          Accept: "application/json"
+          Authorization: !Secret secret
+        body:
+          name: !Parameter name
+          environmentId: !Parameter environment
+          workspaceId: !Parameter workspace
+
+schemas:
+  spec:
+    $schema: http://json-schema.org/draft-07/schema#
+    type: object
+    properties:
+      method:
+        type: string
+        description: The http method to use
+      url:
+        type: string
+        description: The url to make the call to
+      body:
+        type: object
+        description: The optional keys and values to add to the request body
+      headers:
+        type: object
+        description: The optional headers to add to the request
+      query:
+        type: object
+        description: The optional query parameters to add to the request
+      expects:
+        type: object
+        description: The optional http code(s) required for the step to succeed
+      failon:
+        type: object
+        description: The optional http code(s) that will always make the step fail  
+    required:
+    - method
+    - url
+
+outputs:
+  $schema: http://json-schema.org/draft-07/schema#
+  type: object
+  properties:
+    code:
+      type: string
+      description: The numeric http code
+    response:
+      type: string
+      description: The response body
