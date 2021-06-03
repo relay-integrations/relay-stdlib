@@ -76,11 +76,11 @@
           "name",
           "repository"
         ]
-      },
-      "required": [
-        "method",
-        "url"
-      ],
-      "additionalProperties": false
-    }
+      }
+    },
+    "required": [
+      "method",
+      "url"
+    ],
+    "additionalProperties": false
 }
