@@ -19,6 +19,30 @@ QUERY=($(ni get | jq -r '.query // empty | to_entries[] | "\(.key)=\(.value)"'))
 ARGS=""
 QUERYPARAMS=""
 
+# Read request body from a file. Supports files from a git repository or files on a public site
+FILE=$(ni get -p {.file})
+if [ -n "${FILE}" ]; then
+    GIT=$(ni get -p {.git})
+    if [ -n "${GIT}" ]; then
+        ni git clone
+        NAME=$(ni get -p {.git.name})
+        FILEPATH="/workspace/${NAME}/${FILE}"
+        BODY=$(cat $FILEPATH | jq -rc 'try . //empty')
+    else    
+        BODY=$(curl -s $FILE | jq -rc 'try . //empty')
+    fi
+    IFS=$' '
+    FILEVARS=($(ni get | jq -r '.filevars // empty | to_entries[] | "\(.key)=\(.value)"'))
+    if [ -n "${FILEVARS}" ]; then
+        while IFS='=' read -r key value
+        do
+            BODY=${BODY//$key/$value}
+        done < <(echo $FILEVARS)
+    fi
+    IFS=$'\n'    
+
+fi
+
 for header in "${HEADERS[@]}"
 do
 	ARGS+="-H ${header} "

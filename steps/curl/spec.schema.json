@@ -1,0 +1,86 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+      "method": {
+        "type": "string",
+        "default": "GET",
+        "description": "The http method to use"
+      },
+      "url": {
+        "type": "string",
+        "description": "The url to make the call to"
+      },
+      "file": {
+        "type": "string",
+        "description": "The optional file to use as a body. Can be a public url or a file from a git repository"
+      },
+      "filevars": {
+        "type": "object",
+        "description": "The optional keys to replace in the file body"
+      },
+      "body": {
+        "type": "object",
+        "description": "The optional keys and values to add to the request body"
+      },
+      "headers": {
+        "type": "object",
+        "description": "The optional headers to add to the request"
+      },
+      "query": {
+        "type": "object",
+        "description": "The optional query parameters to add to the request"
+      },
+      "expects": {
+        "type": "object",
+        "description": "The optional http code(s) required for the step to succeed"
+      },
+      "failon": {
+        "type": "object",
+        "description": "The optional http code(s) that will always make the step fail"
+      },
+      "git": {
+        "type": "object",
+        "description": "A git repository containing the file for the request body",
+        "properties": {
+          "connection": {
+            "type": "object",
+            "x-relay-connectionType": "ssh",
+            "description": "A Relay SSH connection to use",
+            "properties": {
+              "sshKey": {
+                "type": "string",
+                "description": "The SSH key to use when cloning the git repository."
+              },
+              "knownHosts": {
+                "type": "string",
+                "description": "SSH known hosts file."
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "A directory name for the git clone."
+          },
+          "branch": {
+            "type": "string",
+            "description": "The Git branch to clone.",
+            "default": "master"
+          },
+          "repository": {
+            "type": "string",
+            "description": "The git repository URL."
+          }
+        },
+        "required": [
+          "name",
+          "repository"
+        ]
+      },
+      "required": [
+        "method",
+        "url"
+      ],
+      "additionalProperties": false
+    }
+}

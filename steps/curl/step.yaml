@@ -4,7 +4,7 @@ apiVersion: integration/v1
 kind: Step
 name: curl
 version: 1
-summary: Makes an API call and returns the status code + response body
+summary: Run curl
 
 description: |
   Makes an API call and returns the status code + response body
@@ -59,42 +59,9 @@ examples:
           workspaceId: !Parameter workspace
 
 schemas:
+  outputs:
+    source: file
+    file: outputs.schema.json
   spec:
-    $schema: http://json-schema.org/draft-07/schema#
-    type: object
-    properties:
-      method:
-        type: string
-        description: The http method to use
-      url:
-        type: string
-        description: The url to make the call to
-      body:
-        type: object
-        description: The optional keys and values to add to the request body
-      headers:
-        type: object
-        description: The optional headers to add to the request
-      query:
-        type: object
-        description: The optional query parameters to add to the request
-      expects:
-        type: object
-        description: The optional http code(s) required for the step to succeed
-      failon:
-        type: object
-        description: The optional http code(s) that will always make the step fail  
-    required:
-    - method
-    - url
-
-outputs:
-  $schema: http://json-schema.org/draft-07/schema#
-  type: object
-  properties:
-    code:
-      type: string
-      description: The numeric http code
-    response:
-      type: string
-      description: The response body
+    source: file
+    file: spec.schema.json
