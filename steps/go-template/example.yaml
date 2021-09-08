@@ -1,0 +1,18 @@
+apiVersion: "v1"
+parameters:
+  payload:
+    default:
+      brother: "Mark"
+      movie: "X Men"
+      time: "10:00"
+steps:
+  - name: "template-transform"
+    image: "awrenn53/relay-template-renderer:latest"
+    spec:
+      template: "My brother {{ .brother }} wants to see the movie {{ .movie }} at {{ .time }}!"
+      parameters: !Parameter payload
+      output: "msg"
+  - name: "echo"
+    image: "relaysh/stdlib-step-echo"
+    spec:
+      message: !Output { from: template-transform, name: msg }
