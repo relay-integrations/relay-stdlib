@@ -4,7 +4,7 @@ name: json
 version: 1
 summary: Receive a webhook
 description: |
-  This trigger receives a generic webhook and passes through a JSON object 
+  This trigger receives a generic webhook and passes through a JSON object
   sent as an HTTP request body as Relay event.
 
 responders:
@@ -27,7 +27,7 @@ examples:
       image: relaysh/stdlib-trigger-json
     binding:
       parameters:
-        foo: !Data foo
+        foo: ${event.foo}
 
 build:
   apiVersion: build/v1

@@ -4,7 +4,7 @@ name: echo
 version: 1
 summary: Echo a message
 description: |
-  This step echoes a message that is provided as a parameter
+  This step echoes a provided message
 build:
   apiVersion: build/v1
   kind: Docker
