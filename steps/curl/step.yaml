@@ -52,11 +52,11 @@ examples:
         headers:
           "Content-Type": "application/json"
           Accept: "application/json"
-          Authorization: !Secret secret
+          Authorization: ${secrets.auth}
         body:
-          name: !Parameter name
-          environmentId: !Parameter environment
-          workspaceId: !Parameter workspace
+          name: ${parameters.name}
+          environmentId: ${parameters.environment}
+          workspaceId: ${parameters.workspace}
 
 schemas:
   outputs:
