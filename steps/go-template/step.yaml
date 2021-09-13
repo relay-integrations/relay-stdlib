@@ -1,49 +1,48 @@
-apiVersion: "integration/v1"
-kind: "Step"
-name: "relay-template-renderer"
-channel: "stable"
-version: "v20200408"
-summary: "Render a go text/template with a JSON input"
+apiVersion: integration/v1
+kind: Step
+name: go-template
+summary: Render a Go text/template with a JSON input
 build:
-  apiVersion: "build/v1"
-  kind: "Docker"
+  apiVersion: build/v1
+  kind: Docker
 publish:
-  repository: "awrenn53/relay-template-renderer"
+  repository: relaysh/stdlib-step-go-template
 schemas:
   spec:
-    source: "file"
-    file: "spec.schema.json"
-schemas:
-  spec:
-    $schema: "http://json-schema.org/draft-07/schema#"
-    type: object
-    properties:
-      template:
-        type: "string"
-        description: "The template to fill out with the arguments - uses go's template/text syntax"
-      parameters:
-        type: "string"
-        description: "JSON Object to call template.Render with for the above template"
-      output:
-        type: "string"
-        description: "The variable name to output the rendered template to - useful for matching input of next stage"
- outputs:
-   $schema: "http://json-schema.org/draft-07/schema#"
-    type: "object"
-    properties:
-      result:
-        type: "string"
-        description: "The rendered template"
-exampLes:
-  - summary: "Transform a payload in a rendered string"
-    content:
-      apiVersion: "v1"
-      kind: "Step"
-      name: "Render template"
-      image: "awrenn53/relay-template-renderer"
+    source: file
+    file: spec.schema.json
+  outputs:
+    source: file
+    file: outputs.schema.json
+examples:
+- summary: Transform a payload in a rendered string
+  content:
+    apiVersion: v1
+    kind: Step
+    name: render-template
+    image: relaysh/stdlib-step-go-template
+    spec:
+      data:
+        from: ACW
+      template: "Hello world! From, {.from}"
+- summary: Pretty-print an object parameter
+  content:
+    apiVersion: v1
+    kind: Workflow
+    parameters:
+      payload:
+        default:
+          brother: Mark
+          movie: X Men
+          time: '10:00'
+    steps:
+    - name: template-transform
+      image: relaysh/stdlib-step-go-template
       spec:
-        parameters: '{"from": "ACW"}'
-        template: "Hello world! From, {.from}"
-owner:
-  name: "Andrew Wrenn"
-  email: "awrenn53@gmail.com"
+        template: |
+          My brother {{ .brother }} wants to see the movie {{ .movie }} at {{ .time }}!
+        data: ${parameters.payload}
+    - name: echo
+      image: relaysh/stdlib-step-echo
+      spec:
+        message: ${outputs.template-transform.output}

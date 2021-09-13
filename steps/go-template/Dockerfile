@@ -1,15 +1,11 @@
-FROM golang:1.16 as build
+FROM golang:1.16-alpine AS builder
+ENV CGO_ENABLED 0
+WORKDIR /build
+COPY . .
+RUN go build -a -o /bin/go-template ./cmd/go-template
 
-WORKDIR /pkg 
-
-COPY ./src .
-
-RUN go build -o renderder
-
-FROM debian:latest
-
-COPY --from=build /pkg/renderder /bin/renderer
-
-RUN apt update; apt install ca-certificates -y; rm -rf /var/lib/apt/lists/*
-
-CMD ["/bin/renderer"]
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates && update-ca-certificates
+COPY --from=builder /bin/go-template /bin/go-template
+ENTRYPOINT []
+CMD ["/bin/go-template"]
