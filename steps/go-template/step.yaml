@@ -1,0 +1,48 @@
+apiVersion: integration/v1
+kind: Step
+name: go-template
+summary: Render a Go text/template with a JSON input
+build:
+  apiVersion: build/v1
+  kind: Docker
+publish:
+  repository: relaysh/stdlib-step-go-template
+schemas:
+  spec:
+    source: file
+    file: spec.schema.json
+  outputs:
+    source: file
+    file: outputs.schema.json
+examples:
+- summary: Transform a payload in a rendered string
+  content:
+    apiVersion: v1
+    kind: Step
+    name: render-template
+    image: relaysh/stdlib-step-go-template
+    spec:
+      data:
+        from: ACW
+      template: "Hello world! From, {.from}"
+- summary: Pretty-print an object parameter
+  content:
+    apiVersion: v1
+    kind: Workflow
+    parameters:
+      payload:
+        default:
+          brother: Mark
+          movie: X Men
+          time: '10:00'
+    steps:
+    - name: template-transform
+      image: relaysh/stdlib-step-go-template
+      spec:
+        template: |
+          My brother {{ .brother }} wants to see the movie {{ .movie }} at {{ .time }}!
+        data: ${parameters.payload}
+    - name: echo
+      image: relaysh/stdlib-step-echo
+      spec:
+        message: ${outputs.template-transform.output}
