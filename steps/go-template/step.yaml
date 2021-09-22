@@ -2,6 +2,7 @@ apiVersion: integration/v1
 kind: Step
 name: go-template
 summary: Render a Go text/template with a JSON input
+version: 1
 build:
   apiVersion: build/v1
   kind: Docker
