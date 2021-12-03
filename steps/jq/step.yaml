@@ -4,7 +4,7 @@ name: jq
 version: 1
 summary: Run jq
 description: |
-  This step applies a jq filter to some arbitrary input data.
+  This step applies a jq filter to process JSON data.
 build:
   apiVersion: build/v1
   kind: Docker
