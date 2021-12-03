@@ -1,6 +1,6 @@
 # stdlib-step-jq
 
-This step applies a jq filter to some arbitrary input data.
+This step applies a jq filter to process JSON data.
 
 ## Specification
 
