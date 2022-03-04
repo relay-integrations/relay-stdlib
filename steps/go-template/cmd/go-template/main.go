@@ -9,6 +9,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/Masterminds/sprig/v3"
 	"github.com/puppetlabs/relay-sdk-go/pkg/outputs"
 	"github.com/puppetlabs/relay-sdk-go/pkg/taskutil"
 )
@@ -43,7 +44,7 @@ func run() error {
 		return err
 	}
 
-	t, err := template.New("template").Parse(spec.Template)
+	t, err := template.New("template").Funcs(sprig.TxtFuncMap()).Parse(spec.Template)
 	if err != nil {
 		return err
 	}
