@@ -28,7 +28,7 @@ examples:
       spec:
         method: GET
         url: "https://random.justyy.workers.dev/api/random/"
-        expects: 200
+        expects: [ 200 ]
         query:
           n: 32
           x: 1
